@@ -39,9 +39,9 @@ npm install
 
 ### 3️⃣ Configurer les variables d'environnement
 Créer un fichier .env et ajouter :
-    **PORT=7000**
-    **JWT_SECRET=supersecretkey**
-    **DATABASE_URL="file:./dev.db"**
+    **PORT=7000**  
+    **JWT_SECRET=supersecretkey**  
+    **DATABASE_URL="file:./dev.db"**  
 
 ### 4️⃣ Initialiser Prisma
 ```sh
