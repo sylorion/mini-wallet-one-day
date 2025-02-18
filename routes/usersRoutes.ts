@@ -1,14 +1,11 @@
-import { Router, Request, Response } from "express";
-import { PrismaClient } from '@prisma/client';
-import bcrypt from "bcryptjs";
-
-
+import { Router} from "express";
+import {
+  createUser
+} from '../services/userServices'
 
 
 const router = Router()
-const prisma = new PrismaClient()
 
-//create user
 /**
  * @swagger
  * /api/users:
@@ -31,18 +28,12 @@ const prisma = new PrismaClient()
  *     responses:
  *       200:
  *         description: User created successfully
+ *       400:
+ *          description: All fileds are required
+ *       500:
+ *          description: An error occured while creating a user
  */
-router.post("/", async (req, res) => {
-    const { username, email, password } = req.body;
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const user = await prisma.user.create({
-      data: { username, email, password: hashedPassword },
-    });
-  
-    res.json({ message: "User created", user });
-});
+router.post("/", createUser);
 
 
 

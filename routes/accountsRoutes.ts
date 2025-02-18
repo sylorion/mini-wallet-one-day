@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import {createAccount,Deposit
+  ,Withdraw,History
+} from '../services/accountServices'
 
-
-const prisma = new PrismaClient();
 const router = Router()
 
 /**
@@ -25,15 +25,7 @@ const router = Router()
  *       200:
  *         description: Account created successfully
  */
-router.post("/", async (req, res) => {
-    const { userId } = req.body;
-    
-    const account = await prisma.account.create({
-      data: { userId, balance: 0 },
-    });
-  
-    res.json({ message: "Account created", account });
-});
+router.post("/", createAccount);
 
 /**
  * @swagger
@@ -62,25 +54,8 @@ router.post("/", async (req, res) => {
  *       400:
  *         description: Invalid amount
  */
-router.post("/:id/deposit", async (req, res) : Promise<any> => {
-    const accountId = parseInt(req.params.id);
-    const { amount } = req.body;
-  
-    if (amount <= 0) return res.status(400).json({ error: "Amount must be positive" });
-  
-    const account = await prisma.account.update({
-      where: { id: accountId },
-      data: {
-        balance: { increment: amount },
-        transactions: {
-          create: { type: "deposit", amount },
-        },
-      },
-    });
-  
-    res.json({ message: "Deposit successful", account });
-});
-
+router.post("/:id/deposit",Deposit );
+ 
 /**
  * @swagger
  * /api/accounts/{id}/withdraw:
@@ -110,30 +85,7 @@ router.post("/:id/deposit", async (req, res) : Promise<any> => {
  *       404:
  *         description: Account not found
  */
-router.post("/:id/withdraw", async (req, res) : Promise<any> => {
-    const accountId = parseInt(req.params.id);
-    const { amount } = req.body;
-  
-    const account = await prisma.account.findUnique({ where: { id: accountId } });
-  
-    if (!account) return res.status(404).json({ error: "Account not found" });
-  
-    if (amount <= 0) return res.status(400).json({ error: "Amount must be positive" });
-  
-    if (account.balance < amount) return res.status(400).json({ error: "Insufficient funds" });
-  
-    const updatedAccount = await prisma.account.update({
-      where: { id: accountId },
-      data: {
-        balance: { decrement: amount },
-        transactions: {
-          create: { type: "withdraw", amount },
-        },
-      },
-    });
-  
-    res.json({ message: "Withdrawal successful", updatedAccount });
-});
+router.post("/:id/withdraw", Withdraw);
 
 /**
  * @swagger
@@ -153,17 +105,9 @@ router.post("/:id/withdraw", async (req, res) : Promise<any> => {
  *       404:
  *         description: Account not found
  */
-router.get("/:id", async (req, res) : Promise<any> => {
-    const accountId = parseInt(req.params.id);
-  
-    const account = await prisma.account.findUnique({
-      where: { id: accountId },
-      include: { transactions: true },
-    });
-  
-    if (!account) return res.status(404).json({ error: "Account not found" });
-  
-    res.json({ balance: account.balance, transactions: account.transactions });
-});
+router.get("/:id",History);
+
+
+
 
 export default router;

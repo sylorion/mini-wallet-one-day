@@ -4,12 +4,22 @@ import swaggerJsDoc from 'swagger-jsdoc'
 import dotenv from "dotenv"
 import usersRoutes from "./routes/usersRoutes"
 import accountsRoutes from "./routes/accountsRoutes"
+import cors from "cors";
+
+
 
 dotenv.config();
 
 const app=express()
 
+app.use(cors({
+  origin: "*",
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(express.json());
+
 
 const PORT = process.env.PORT;
 
