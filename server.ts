@@ -2,6 +2,8 @@ import express  from "express";
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
 import dotenv from "dotenv"
+import usersRoutes from "./routes/usersRoutes"
+import accountsRoutes from "./routes/accountsRoutes"
 
 dotenv.config();
 
@@ -25,12 +27,14 @@ const swaggerOptions = {
         },
       ],
     },
-    apis: ["./src/routes/*.ts"],
+    apis: ["./routes/*.ts"],
   };
 
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api/users',usersRoutes)
+app.use('/api/accounts',accountsRoutes)
 
 
 app.get('/',(req,res)=>{
