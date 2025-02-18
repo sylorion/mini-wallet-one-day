@@ -6,19 +6,16 @@ Mini Wallet API est une application **Express + TypeScript** qui permet de gére
 
 - **TypeScript** : Langage typé pour JavaScript
 - **Express.js** : Framework web minimaliste pour Node.js
-Prise en main 
 ```bash 
 https://expressjs.com/fr/starter/hello-world.html
  ```
 - **Prisma** : ORM moderne pour interagir avec SQLite
-Prise en main 
 ```bash 
 https://www.prisma.io/docs/getting-started/quickstart-sqlite
  ```
 - **SQLite** : Base de données légère
 - **JWT (JSON Web Token)** : Authentification sécurisée des utilisateurs
 - **Swagger** : Documentation automatique de l'API
-Prise en main 
 ```bash 
 https://dev.to/cuongnp/swagger-nodejs-express-a-step-by-step-guide-4ob
  ```
