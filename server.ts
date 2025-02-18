@@ -43,6 +43,8 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+
 app.use('/api/users',usersRoutes)
 app.use('/api/accounts',accountsRoutes)
 
