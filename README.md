@@ -78,6 +78,9 @@ model Transaction {
   
 </details>  
   
+  
+    
+ NB: En Cas de modification du schéma prisma il faut recommencer les migrations et généré le client     
 
 ### 5️⃣ Lancer le serveur
 ```sh
