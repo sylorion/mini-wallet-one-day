@@ -38,7 +38,7 @@ npm install
 ```
 
 ### 3️⃣ Configurer les variables d'environnement
-Créer un fichier .env et ajouter :
+Créer un fichier .env et ajouter :  
     **PORT=7000**  
     **JWT_SECRET=supersecretkey**  
     **DATABASE_URL="file:./dev.db"**  
@@ -48,6 +48,44 @@ Créer un fichier .env et ajouter :
 npx prisma migrate dev --name init
 npx prisma generate
 ```
+#### Schéma prisma
+<details>
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  email    String   @unique
+  password String
+  accounts Account[]
+}
+
+model Account {
+  id           Int           @id @default(autoincrement())
+  balance      Float         @default(0)
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  type      String   // "deposit" ou "withdraw"
+  amount    Float
+  accountId Int
+  createdAt DateTime @default(now())
+  account   Account  @relation(fields: [accountId], references: [id])
+}
+
+</details>``` 
 
 ### 5️⃣ Lancer le serveur
 ```sh
