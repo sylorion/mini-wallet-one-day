@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 interface UserUpdateBody {
     username?: string;
@@ -10,6 +14,7 @@ interface UserUpdateBody {
   
 
 const prisma = new PrismaClient()
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"
 export const createUser=async (req:Request, res:Response)  : Promise<any> => {
     const { username, email, password } = req.body;
 
@@ -61,7 +66,7 @@ export const getUserById = async (req: Request<{ id: string }>, res: Response) :
     res.json(user);
 }
 
-export const updateUser = async (req: Request<{ id: string }, {}, UserUpdateBody>, res: Response) => {
+export const updateUser = async (req: Request<{ id: string }, {}, UserUpdateBody>, res: Response) : Promise<any> => {
     const userId = parseInt(req.params.id);
     const { username, email, password } = req.body;
   
@@ -84,5 +89,24 @@ export const updateUser = async (req: Request<{ id: string }, {}, UserUpdateBody
     } catch (error) {
       res.status(404).json({ error: "User not found" });
     }
-  }
+}
+
+export const login = async (req: Request, res: Response) : Promise<any> => {
+    const { email, password } = req.body;
+    console.log(email);
+    
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email:email } });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) return res.status(400).json({ error: "Invalid credentials"  });
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+
+    res.json({ message: "Logged successfully", token });
+}
 

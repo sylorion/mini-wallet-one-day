@@ -23,6 +23,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT;
 
+//Configuration de swagger
 const swaggerOptions = {
     definition: {
       openapi: "3.0.0",
@@ -45,6 +46,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
+//Routes
 app.use('/api/users',usersRoutes)
 app.use('/api/accounts',accountsRoutes)
 

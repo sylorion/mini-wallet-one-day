@@ -1,6 +1,6 @@
 import { Router} from "express";
 import {
-  createUser
+  createUser, login
 } from '../services/userServices'
 
 
@@ -35,6 +35,35 @@ const router = Router()
  */
 router.post("/", createUser);
 
+
+/**
+ * @swagger
+ * /api/users/auth/login:
+ *   post:
+ *     summary: User signin
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     description: Verifies credentials and generates a JWT token.
+ *     responses:
+ *       200:
+ *         description: Logged successfull, token JWT generated.
+ *       404:
+ *         description: User not found
+ *       400:
+ *         description: Invalid Credentials
+ * 
+ */
+router.post("/auth/login", login);
 
 
 

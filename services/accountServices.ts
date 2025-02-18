@@ -71,7 +71,7 @@ export const History= async (req:Request, res:Response) : Promise<any> => {
 }
 
 
-//updates
+//updates 
 export const getAccountByUserId=async (req: Request<{ id: string }>, res: Response) : Promise<any> =>{
     const userId = parseInt(req.params.id);
     const accounts = await prisma.account.findMany({
@@ -82,3 +82,17 @@ export const getAccountByUserId=async (req: Request<{ id: string }>, res: Respon
     if (!accounts) return res.status(404).json({ error: "No accounts found" });
     res.json(accounts);
   }
+
+export const getAllAccounts = async (req: Request<{ id: string }>, res: Response) : Promise<any> =>{
+
+    const accounts = await prisma.account.findMany({
+        select: {
+            id:true,
+            balance:true,
+            userId:true,
+            transactions:true
+        },
+      });
+      res.json(accounts);
+}
+
