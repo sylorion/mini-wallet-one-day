@@ -2,6 +2,7 @@ import { Router} from "express";
 import {
   createUser, login
 } from '../services/userServices'
+import { validateLoginInput,validateUserInput } from "../middleware/authMiddleware";
 
 
 const router = Router()
@@ -33,7 +34,7 @@ const router = Router()
  *       500:
  *          description: An error occured while creating a user
  */
-router.post("/", createUser);
+router.post("/",validateUserInput, createUser);
 
 
 /**
@@ -63,7 +64,7 @@ router.post("/", createUser);
  *         description: Invalid Credentials
  * 
  */
-router.post("/auth/login", login);
+router.post("/auth/login",validateLoginInput, login);
 
 
 

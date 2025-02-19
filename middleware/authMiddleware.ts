@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import {body } from "express-validator";
 
 dotenv.config();
 
@@ -40,4 +41,15 @@ export const protect = async (req: Request, res: Response, next: NextFunction):P
         return res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
+
+export const validateUserInput = [
+  body("username").isString().notEmpty(),
+  body("email").isEmail(),
+  body("password").isString().isLength({ min: 6 }).withMessage("Password must be a string and have at least 6 charaters"),
+];
+
+export const validateLoginInput = [
+  body("email").isEmail().withMessage("Invalid email format"),
+  body("password").isString().notEmpty().withMessage("Password is required"),
+];
 
