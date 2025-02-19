@@ -2,6 +2,7 @@ import { Router } from "express";
 import {createAccount,Deposit
   ,Withdraw,History
 } from '../services/accountServices'
+import { protect } from "../middleware/authMiddleware";
 
 const router = Router()
 
@@ -11,6 +12,8 @@ const router = Router()
  *   post:
  *     summary: Create a new account
  *     tags: [Accounts]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -24,8 +27,11 @@ const router = Router()
  *     responses:
  *       200:
  *         description: Account created successfully
+ *       401:
+ *         description: Unauthorized (Invalid or missing token)
  */
-router.post("/", createAccount);
+router.post("/", protect, createAccount);
+
 
 /**
  * @swagger
@@ -62,6 +68,8 @@ router.post("/:id/deposit",Deposit );
  *   post:
  *     summary: Withdraw money from an account
  *     tags: [Accounts]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -82,10 +90,13 @@ router.post("/:id/deposit",Deposit );
  *         description: Withdrawal successful
  *       400:
  *         description: Invalid amount or insufficient funds
+ *       401:
+ *         description: Unauthorized (Invalid or missing token)
  *       404:
  *         description: Account not found
  */
-router.post("/:id/withdraw", Withdraw);
+router.post("/:id/withdraw", protect, Withdraw);
+
 
 /**
  * @swagger
@@ -93,6 +104,8 @@ router.post("/:id/withdraw", Withdraw);
  *   get:
  *     summary: Get account details and transactions
  *     tags: [Accounts]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -102,11 +115,14 @@ router.post("/:id/withdraw", Withdraw);
  *     responses:
  *       200:
  *         description: Account details retrieved successfully
+ *       401:
+ *         description: Unauthorized (Invalid or missing token)
  *       404:
  *         description: Account not found
  */
-router.get("/:id",History);
+router.get("/:id", protect, History);
 
+ 
 
 
 
