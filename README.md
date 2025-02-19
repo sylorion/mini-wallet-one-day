@@ -3,6 +3,26 @@
 ## Introduction
 Mini Wallet Sylorion est une API permettant la gestion des utilisateurs et de leurs comptes bancaires, incluant les opérations de dépôt et de retrait d'argent.  L'accès aux routes sécurisées nécessite une authentification via JWT et une protection CSRF (XSRF-TOKEN).
 
+
+## Technologies utilisées
+
+- **TypeScript** : Langage typé pour JavaScript
+- **Express.js** : Framework web minimaliste pour Node.js
+```bash 
+https://expressjs.com/fr/starter/hello-world.html
+ ```
+- **Prisma** : ORM moderne pour interagir avec SQLite
+```bash 
+https://www.prisma.io/docs/getting-started/quickstart-sqlite
+ ```
+- **SQLite** : Base de données légère
+- **JWT (JSON Web Token)** : Authentification sécurisée des utilisateurs
+- **Swagger** : Documentation automatique de l'API
+```bash 
+https://dev.to/cuongnp/swagger-nodejs-express-a-step-by-step-guide-4ob
+ ```
+- **bcrypt.js** : Hashing sécurisé des mots de passe
+
 ## Installation
 1. Clonez le projet :
    ```sh
@@ -25,7 +45,7 @@ Mini Wallet Sylorion est une API permettant la gestion des utilisateurs et de le
 
 
 ## Authentification & Sécurité des Tokens
-### 1️. Obtention du Token de Connexion & du XSRF-TOKEN
+### 1️. Obtention du Token de Connexion
 - Endpoint : `POST /api/auth/login`
 - Corps de la requête :
   ```json
@@ -38,15 +58,16 @@ Mini Wallet Sylorion est une API permettant la gestion des utilisateurs et de le
   ```json
   {
       "token": "eyJhbGciOiJI...",  // JWT à inclure dans Authorization
-      "xsrfToken": "abc123"  // XSRF-TOKEN à inclure dans X-XSRF-TOKEN
   }
   ```
-- **Le JWT est stocké en cookie sécurisé (HttpOnly, Secure, SameSite=Strict)**.
+- **Pour le XSRF-TOKEN**.
+- Endpoint : `GET /`  
+- Vous verrez le Token dans les cookies
 
 ### 2️. Utilisation des Tokens
 Chaque requête sécurisée doit inclure :
 - **JWT** dans l’en-tête `Authorization: Bearer <token>`
-- **XSRF-TOKEN** dans `X-XSRF-TOKEN: <xsrfToken>`
+- **XSRF-TOKEN** dans `XSRF-TOKEN: <xsrfToken>`
 
 ---
 
@@ -159,6 +180,4 @@ http://localhost:3000/api-docs
 - **CSRF Protection** : Sécurise les requêtes.
 - **JWT** : Gère l'authentification.
 
-## Licence
-MIT
 
