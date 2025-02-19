@@ -19,7 +19,7 @@ export const createUser=async (req:Request, res:Response)  : Promise<any> => {
     const { username, email, password } = req.body;
 
     if(!username || !email || !password){
-        return res.status(400).json({ error: 'All fileds are required' });
+        return res.status(400).json({ error: 'All fields are required' });
     }
     
     try {
@@ -38,6 +38,27 @@ export const createUser=async (req:Request, res:Response)  : Promise<any> => {
   
     
 }
+
+export const login = async (req: Request, res: Response) : Promise<any> => {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email:email } });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) return res.status(400).json({ error: "Invalid credentials"  });
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+
+    res.json({ message: "Logged successfully", token });
+}
+
+
+
 
 //updates
 export const getAllUsers = async (req: Request, res: Response)  : Promise<any> => {
@@ -91,22 +112,5 @@ export const updateUser = async (req: Request<{ id: string }, {}, UserUpdateBody
     }
 }
 
-export const login = async (req: Request, res: Response) : Promise<any> => {
-    const { email, password } = req.body;
-    console.log(email);
-    
-    if (!email || !password) {
-        return res.status(400).json({ error: "Email and password are required" });
-    }
 
-    const user = await prisma.user.findUnique({ where: { email:email } });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(400).json({ error: "Invalid credentials"  });
-
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "1h" });
-
-    res.json({ message: "Logged successfully", token });
-}
 
