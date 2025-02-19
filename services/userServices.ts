@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {validationResult } from "express-validator";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -57,7 +58,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
   const token = jwt.sign({ userId: user.id, email:user.email }, JWT_SECRET, { expiresIn: "1h" });
 
-  res.json({ message: "Logged successfully", token });
+  res.json({ message: "Logged successfully", token});
 };
 
 //updates
